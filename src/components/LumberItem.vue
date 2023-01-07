@@ -22,7 +22,7 @@
     <div class="info">
       <div>{{ lumberItem.id }}</div>
       <div>{{ lumberItem.dimension.lengthInches }}in x {{ lumberItem.dimension.widthInches }}in</div>
-      <div v-if="dragEnd">{{ dragEnd.y }} {{ dragEnd.x }}</div>
+      <div>{{ dragEnd?.y ?? 0 }} {{ dragEnd?.x ?? 0 }}</div>
       <div>{{ dragLength }}in x {{ dragWidth }}in</div>
     </div>
   </div>
@@ -30,7 +30,9 @@
 
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue';
-import type { LumberItem } from '@/models/Lumber';
+import { mapStores } from 'pinia';
+import { useLumberStore } from '@/stores/lumber';
+import type { LumberItem, WorkPiece } from '@/models/Lumber';
 
 interface GridCell {
   index: number,
@@ -63,6 +65,10 @@ export default defineComponent({
     }
   },
   computed: {
+    ...mapStores(useLumberStore),
+    workPieces(): WorkPiece[] {
+      return this.lumberStore.workPieces.get(this.lumberItem.id) ?? []
+    },
     gridTemplateColumns(): string {
       return `repeat(${this.lumberItem.dimension.widthInches}, 1fr)`
     },
@@ -149,6 +155,20 @@ export default defineComponent({
       }
     },
     handleDrag() {
+      if (!this.isDragValid) {
+        return
+      }
+      this.lumberStore.addNewWorkPiece(
+        this.lumberItem.id,
+        {
+          x: this.dragMinX,
+          y: this.dragMinY,
+        },
+        {
+          lengthInches: this.dragLength,
+          lengthWidth: this.dragWidth,
+        },
+      )
       this.resetDrag()
     },
     resetDrag() {
