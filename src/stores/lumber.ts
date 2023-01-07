@@ -1,12 +1,24 @@
-import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+import type { LumberItem } from '@/models/Lumber'
+import { Guid } from "guid-typescript";
 
-export const useLumberStore = defineStore('lumber', () => {
-  const count = ref(0)
-  const doubleCount = computed(() => count.value * 2)
-  function increment() {
-    count.value++
-  }
+interface State {
+  lumberItems: LumberItem[]
+}
 
-  return { count, doubleCount, increment }
+export const useLumberStore = defineStore('lumber', {
+  state: (): State => ({
+      lumberItems: []
+  }),
+  actions: {
+    addNewLumberItem() {
+      this.lumberItems.push({
+        id: Guid.create().toString(),
+        dimension: {
+          lengthInches: 12 * 8,
+          widthInches: 12 * 4,
+        },
+      })
+    }
+  },
 })
