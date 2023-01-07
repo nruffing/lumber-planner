@@ -42,6 +42,7 @@ interface Data {
   cells: GridCell[],
   dragStart?: GridCell,
   dragEnd?: GridCell,
+  intervalId?: number,
 }
 
 export default defineComponent({
@@ -57,6 +58,7 @@ export default defineComponent({
       cells: [],
       dragStart: undefined,
       dragEnd: undefined,
+      intervalId: undefined,
     }
   },
   computed: {
@@ -115,8 +117,13 @@ export default defineComponent({
         y,
       })
     }
+
+    this.intervalId = setInterval(this.updateCurrentDrag, 50)
   },
   beforeUnmount() {
+    if (this.intervalId) {
+      clearInterval(this.intervalId)
+    }
   },
   methods: {
     onCellMouseDown(cell: GridCell) {
@@ -129,12 +136,11 @@ export default defineComponent({
     onCellMouseOver(cell: GridCell) {
       if (this.dragStart) {
         this.dragEnd = cell
-        this.updateCurrentDrag()
       }
     },
     updateCurrentDrag() {
       if (!this.isDragValid) {
-        return this.resetDrag()
+        return
       }
       for (const cell of this.cells) {
         cell.inCurrentDrag = cell.x >= this.dragMinX &&
