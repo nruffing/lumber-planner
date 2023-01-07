@@ -22,6 +22,7 @@
     <div class="info">
       <div>{{ lumberItem.id }}</div>
       <div>{{ lumberItem.dimension.lengthInches }}in x {{ lumberItem.dimension.widthInches }}in</div>
+      <div v-if="dragEnd">{{ dragEnd.y }} {{ dragEnd.x }}</div>
       <div>{{ dragLength }}in x {{ dragWidth }}in</div>
     </div>
   </div>
@@ -134,9 +135,7 @@ export default defineComponent({
       }
     },
     onCellMouseOver(cell: GridCell) {
-      if (this.dragStart) {
-        this.dragEnd = cell
-      }
+      this.dragEnd = cell
     },
     updateCurrentDrag() {
       if (!this.isDragValid) {
@@ -154,7 +153,6 @@ export default defineComponent({
     },
     resetDrag() {
       this.dragStart = undefined
-      this.dragEnd = undefined
       for (const cell of this.cells) {
         cell.inCurrentDrag = false 
       }
