@@ -9,6 +9,11 @@ interface State {
   activeWorkPiece?: WorkPiece,
 }
 
+interface SaveState {  
+  lumberItems: LumberItem[]
+  workPieces: [string, WorkPiece[]][],
+}
+
 export const useLumberStore = defineStore('lumber', {
   state: (): State => ({
       lumberItems: [],
@@ -16,6 +21,14 @@ export const useLumberStore = defineStore('lumber', {
       activeLumberItem: undefined,
       activeWorkPiece: undefined,
   }),
+  getters: {
+    saveState(): SaveState {
+      return {
+        lumberItems: this.lumberItems,
+        workPieces: Array.from(this.workPieces.entries()),
+      }
+    },
+  },
   actions: {
     addNewLumberItem() {
       const lumberItem = {
@@ -73,5 +86,28 @@ export const useLumberStore = defineStore('lumber', {
     selectWorkPiece(workPiece: WorkPiece) {
       this.activeWorkPiece = workPiece
     },
+    saveToLocalStorage() {
+      localStorage.setItem('lumber-state', JSON.stringify(this.saveState))
+    },
+    loadFromLocalStorage() {
+      const saveStateJson = localStorage.getItem('lumber-state')
+      if (saveStateJson) {
+        this.loadFromSaveStateJson(saveStateJson)
+      }
+    },
+    loadFromSaveStateJson(json: string) {
+      this.$reset()
+      const saveState = JSON.parse(json) as SaveState
+      for (const workPiece of saveState.workPieces) {
+        const [lumberItemId, lumberWorkPieces] = workPiece
+        this.workPieces.set(lumberItemId, [...lumberWorkPieces])
+      }
+      for (const lumberItem of saveState.lumberItems) {
+        this.lumberItems.push({...lumberItem})
+      }
+      if (this.lumberItems.length) {
+        this.selectLumberItem(this.lumberItems[0])
+      }
+    }
   },
 })

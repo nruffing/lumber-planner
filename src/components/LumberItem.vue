@@ -71,7 +71,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, type PropType } from 'vue';
+import { defineComponent, type PropType, nextTick } from 'vue';
 import { mapStores } from 'pinia';
 import { useLumberStore } from '@/stores/lumber';
 import type { LumberItem, WorkPiece, Position } from '@/models/Lumber';
@@ -91,6 +91,7 @@ interface Data {
   intervalId?: number,
   cellSize: number,
   borderWidth: number,
+  grid?: HTMLDivElement,
 }
 
 export default defineComponent({
@@ -112,17 +113,15 @@ export default defineComponent({
       intervalId: undefined,
       cellSize: 12,
       borderWidth: 1,
+      grid: undefined,
     }
   },
   computed: {
     ...mapStores(useLumberStore),
-    gridElement(): HTMLDivElement {
-      return this.$refs.grid as HTMLDivElement
-    },
     gridOrigin(): Position {
       return {
-        x: this.gridElement.offsetLeft,
-        y: this.gridElement.offsetTop,
+        x: this.grid?.offsetLeft ?? 0,
+        y: this.grid?.offsetTop ?? 0,
       }
     },
     workPieces(): WorkPiece[] {
@@ -183,6 +182,8 @@ export default defineComponent({
         y,
       })
     }
+
+    nextTick(() => this.grid = this.$refs.grid as HTMLDivElement)
 
     this.intervalId = setInterval(this.updateCurrentDrag, 50)
 
