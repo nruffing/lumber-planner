@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <div 
+      ref="grid"
       class="grid"
       :style="{ 
         'grid-template-columns': gridTemplateColumns,
@@ -15,10 +16,23 @@
           'last-in-row': cell.x === lumberItem.dimension.widthInches,
           'last-in-col': cell.y === lumberItem.dimension.lengthInches,
         }"
+        :style="{
+          height: cellSize + 'px',
+          width: cellSize + 'px',
+        }"
         @mousedown="onCellMouseDown(cell)"
         @mouseover="onCellMouseOver(cell)"
-        :title="cell.x + ', ' + cell.y"></div>
+        :title="cell.x + ', ' + cell.y">
+      </div>
     </div>
+
+    <WorkPieceComponent 
+      v-for="workPiece in workPieces"
+      :work-piece="workPiece"
+      :grid-origin="gridOrigin"
+      :scale="cellSize"
+      :border-width="borderWidth" />
+
     <div class="info">
       <div>{{ lumberItem.id }}</div>
       <div>{{ lumberItem.dimension.lengthInches }}in x {{ lumberItem.dimension.widthInches }}in</div>
@@ -32,7 +46,8 @@
 import { defineComponent, type PropType } from 'vue';
 import { mapStores } from 'pinia';
 import { useLumberStore } from '@/stores/lumber';
-import type { LumberItem, WorkPiece } from '@/models/Lumber';
+import type { LumberItem, WorkPiece, Position } from '@/models/Lumber';
+import WorkPieceComponent from './WorkPiece.vue';
 
 interface GridCell {
   index: number,
@@ -46,10 +61,15 @@ interface Data {
   dragStart?: GridCell,
   dragEnd?: GridCell,
   intervalId?: number,
+  cellSize: number,
+  borderWidth: number,
 }
 
 export default defineComponent({
   name: 'LumberItem',
+  components: {
+    WorkPieceComponent
+  },
   props: {
     lumberItem: {
       type: Object as PropType<LumberItem>,
@@ -62,10 +82,21 @@ export default defineComponent({
       dragStart: undefined,
       dragEnd: undefined,
       intervalId: undefined,
+      cellSize: 12,
+      borderWidth: 1,
     }
   },
   computed: {
     ...mapStores(useLumberStore),
+    gridElement(): HTMLDivElement {
+      return this.$refs.grid as HTMLDivElement
+    },
+    gridOrigin(): Position {
+      return {
+        x: this.gridElement.offsetLeft,
+        y: this.gridElement.offsetTop,
+      }
+    },
     workPieces(): WorkPiece[] {
       return this.lumberStore.workPieces.get(this.lumberItem.id) ?? []
     },
@@ -73,7 +104,7 @@ export default defineComponent({
       return `repeat(${this.lumberItem.dimension.widthInches}, 1fr)`
     },
     gridWidth(): string {
-      return (12 * this.lumberItem.dimension.widthInches) + 'px'
+      return `${((this.cellSize + this.borderWidth) * this.lumberItem.dimension.widthInches) + this.borderWidth}px`
     },
     isDragValid(): boolean {
       return !!(this.dragStart && this.dragEnd)
@@ -103,10 +134,10 @@ export default defineComponent({
       return Math.max(this.dragStart?.y ?? 0, this.dragEnd?.y ?? 0)
     },
     dragWidth(): number {
-      return this.dragMaxX - this.dragMinX
+      return this.dragMaxX - this.dragMinX + 1
     },
     dragLength(): number {
-      return this.dragMaxY - this.dragMinY
+      return this.dragMaxY - this.dragMinY + 1
     },
   },
   mounted() {
@@ -166,7 +197,7 @@ export default defineComponent({
         },
         {
           lengthInches: this.dragLength,
-          lengthWidth: this.dragWidth,
+          widthInches: this.dragWidth,
         },
       )
       this.resetDrag()
@@ -195,8 +226,6 @@ export default defineComponent({
 .cell {
   border-top: var(--grid-border);
   border-left: var(--grid-border);
-  height: 10px;
-  width: 10px;
   cursor: pointer;
 }
 
