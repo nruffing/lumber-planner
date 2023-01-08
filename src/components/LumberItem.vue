@@ -34,7 +34,7 @@
       :border-width="borderWidth" />
 
     <div class="info">
-      <div class="close">
+      <div class="button">
         <button @click="lumberStore.removeLumberItem(lumberItem)">Close</button>
       </div>
       <hr />
@@ -61,6 +61,9 @@
         </div>
         <div>x: {{ lumberStore.activeWorkPiece.position.x }} y: {{ lumberStore.activeWorkPiece.position.y }}</div>
         <div>{{ lumberStore.activeWorkPiece.dimension.lengthInches }}in x {{ lumberStore.activeWorkPiece.dimension.widthInches }}in</div>
+        <div class="button">
+          <button @click="lumberStore.removeSelectedWorkPiece()">Remove</button>
+        </div>
       </template>
       <hr />
     </div>
@@ -182,11 +185,15 @@ export default defineComponent({
     }
 
     this.intervalId = setInterval(this.updateCurrentDrag, 50)
+
+    window.addEventListener('keydown', this.onKeyDown)
   },
   beforeUnmount() {
     if (this.intervalId) {
       clearInterval(this.intervalId)
     }
+
+    window.removeEventListener('keydown', this.onKeyDown)
   },
   methods: {
     onCellMouseDown(cell: GridCell) {
@@ -233,6 +240,11 @@ export default defineComponent({
         cell.inCurrentDrag = false 
       }
     },
+    onKeyDown(event: KeyboardEvent) {
+      if (event?.key === 'Escape') {
+        this.resetDrag()
+      }
+    },
   },
 })
 </script>
@@ -274,7 +286,7 @@ export default defineComponent({
   flex: 1;
 }
 
-.info .close {
+.info .button {
   text-align: right;
 }
 
