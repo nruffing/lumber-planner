@@ -38,6 +38,9 @@
       <div>{{ lumberItem.dimension.lengthInches }}in x {{ lumberItem.dimension.widthInches }}in</div>
       <div>{{ dragEnd?.y ?? 0 }} {{ dragEnd?.x ?? 0 }}</div>
       <div>{{ dragLength }}in x {{ dragWidth }}in</div>
+      <div>
+        <input v-model="lumberItem.name" />
+      </div>
     </div>
   </div>
 </template>
@@ -246,5 +249,9 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.info input {
+  width: 100%;
 }
 </style>

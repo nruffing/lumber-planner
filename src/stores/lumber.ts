@@ -20,6 +20,7 @@ export const useLumberStore = defineStore('lumber', {
           lengthInches: 12 * 8,
           widthInches: 12 * 4,
         },
+        name: 'new lumbar',
       })
     },
     addNewWorkPiece(lumberItemId: string, position: Position, dimension: Dimension) {
@@ -32,6 +33,7 @@ export const useLumberStore = defineStore('lumber', {
         id: Guid.create().toString(),
         position,
         dimension,
+        name: '',
       })
     },
   },
