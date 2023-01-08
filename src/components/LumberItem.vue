@@ -34,6 +34,7 @@
       :border-width="borderWidth" />
 
     <div class="info">
+      <button @click="lumberStore.removeLumberItem(lumberItem)">Close</button>
       <div>{{ lumberItem.id }}</div>
       <div>{{ lumberItem.dimension.lengthInches }}in x {{ lumberItem.dimension.widthInches }}in</div>
       <div>{{ dragEnd?.y ?? 0 }} {{ dragEnd?.x ?? 0 }}</div>

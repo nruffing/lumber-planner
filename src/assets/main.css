@@ -6,6 +6,9 @@
   --grid-border: 1px solid rgb(110, 109, 109);
   --work-piece-border: 1px solid rgb(212, 212, 212);
   --input-background: rgb(171, 171, 171);
+  --active-tab: rgb(217, 142, 3);
+  --button-primary: rgb(34, 140, 140);
+  --button-secondary: rgb(23, 23, 23);
 }
 /* Variables */
 
@@ -30,9 +33,45 @@ div {
   font-size: 18px;
 }
 
+.flex-fill {
+  flex: 1;
+}
+
 input {
   font-size: 18px;
   background-color: var(--input-background);
   padding: 5px;
   outline: none;
+}
+
+button {
+  background-color: transparent;
+  color: var(--button-primary);
+  border-radius: 0;
+  border: solid 1px var(--button-primary);
+  padding: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: var(--button-primary);
+  color: var(--button-secondary);
+}
+
+.tabs {
+  display: flex;
+  flex-direction: row;
+  border-bottom: var(--grid-border);
+  padding: 4px;
+}
+
+.tab {
+  padding: 5px 10px;
+  cursor: pointer;
+  border-right: var(--grid-border);
+}
+
+.tab.active {
+  color: var(--active-tab);
+  border: solid 1px var(--active-tab);
 }
