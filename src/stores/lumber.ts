@@ -2,6 +2,9 @@ import { defineStore } from 'pinia'
 import type { LumberItem, WorkPiece, Position, Dimension } from '@/models/Lumber'
 import { Guid } from "guid-typescript";
 
+const downloadAnchor = document.createElement('a')
+const uploadInput = document.createElement('input')
+
 interface State {
   lumberItems: LumberItem[]
   workPieces: Map<string, WorkPiece[]>,
@@ -67,6 +70,7 @@ export const useLumberStore = defineStore('lumber', {
         position,
         dimension,
         name: 'new workpiece',
+        notes: '',
       }
       workPieces.push(workPiece)
       this.activeWorkPiece = workPiece
@@ -108,6 +112,34 @@ export const useLumberStore = defineStore('lumber', {
       if (this.lumberItems.length) {
         this.selectLumberItem(this.lumberItems[0])
       }
-    }
+    },
+    saveStateToFile() {
+      const json = JSON.stringify(this.saveState)
+      downloadAnchor.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(json)
+      downloadAnchor.download = Guid.create().toString() + '.lumber'
+      downloadAnchor.click()
+    },
+    loadStateFromFile() {
+      uploadInput.type = 'file'
+      uploadInput.accept = '.lumber'
+
+      const uploadEventHandler = () => {
+        if (uploadInput.files?.length) {
+          const file = uploadInput.files[0]
+          const reader = new FileReader()
+          reader.onload = (event: ProgressEvent<FileReader>) => {
+            const json = event.target?.result as string
+            if (json) {
+              this.loadFromSaveStateJson(json)
+            }
+          }
+          reader.readAsText(file)
+        }
+        uploadInput.removeEventListener('input', uploadEventHandler)
+      }
+
+      uploadInput.addEventListener('input', uploadEventHandler)
+      uploadInput.click()
+    },
   },
 })

@@ -1,6 +1,6 @@
-# lumber
+# Lumber Planner
 
-This template should help get you started developing with Vue 3 in Vite.
+Web app to assist in planning how to organize the work pieces you need out of a piece of lumber. Currently assumes 4' by 8' plywood is being used.
 
 ## Recommended IDE Setup
 

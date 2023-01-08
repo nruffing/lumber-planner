@@ -61,6 +61,9 @@
         </div>
         <div>x: {{ lumberStore.activeWorkPiece.position.x }} y: {{ lumberStore.activeWorkPiece.position.y }}</div>
         <div>{{ lumberStore.activeWorkPiece.dimension.lengthInches }}in x {{ lumberStore.activeWorkPiece.dimension.widthInches }}in</div>
+        <div>
+          <textarea v-model="lumberStore.activeWorkPiece.notes" />
+        </div>
         <div class="button">
           <button @click="lumberStore.removeSelectedWorkPiece()">Remove</button>
         </div>
@@ -291,8 +294,13 @@ export default defineComponent({
   text-align: right;
 }
 
-.info input {
+.info input,
+.info textarea {
   width: 100%;
+}
+
+.info textarea {
+  height: 150px;
 }
 
 .info h4 {

@@ -15,6 +15,12 @@
       <button @click="lumberStore.addNewLumberItem">
         Add
       </button>
+      <button @click="lumberStore.saveStateToFile">
+        Save
+      </button>
+      <button @click="lumberStore.loadStateFromFile">
+        Open
+      </button>
     </div>
     <LumberItem 
       v-if="lumberStore.activeLumberItem"
@@ -52,24 +58,12 @@ export default defineComponent({
       this.lumberStore.addNewLumberItem()
     }
     
-    window.addEventListener('keydown', this.onKeyDown)
-
     this.saveIntervalId = setInterval(this.lumberStore.saveToLocalStorage, 5 * 1000)
   },
   beforeUnmount() {
-    window.removeEventListener('keydown', this.onKeyDown)
-    
     if (this.saveIntervalId) {
       clearInterval(this.saveIntervalId)
     }
-  },
-  methods: {
-    onKeyDown(event: KeyboardEvent) {
-      //console.log(event.key)
-      if (event?.key === 'Delete') {
-        this.lumberStore.removeSelectedWorkPiece()
-      }
-    },
   },
 })
 </script>

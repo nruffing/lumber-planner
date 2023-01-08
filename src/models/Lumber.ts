@@ -9,6 +9,7 @@ export interface WorkPiece {
   dimension: Dimension,
   position: Position,
   name: string,
+  notes: string,
 }
 
 export interface Dimension {

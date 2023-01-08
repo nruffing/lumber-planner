@@ -12,7 +12,7 @@
       'background-color': colorHex,
     }"
     @click="lumberStore.selectWorkPiece(workPiece)"
-    :title="`${workPiece.name} | ${workPiece.dimension.lengthInches}in x ${workPiece.dimension.widthInches}in`">
+    :title="`${workPiece.name} | ${workPiece.dimension.lengthInches}in x ${workPiece.dimension.widthInches}in | ${workPiece.notes}`">
   </div>
 </template>
 
