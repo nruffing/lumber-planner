@@ -6,6 +6,7 @@ interface State {
   lumberItems: LumberItem[]
   workPieces: Map<string, WorkPiece[]>,
   activeLumberItem?: LumberItem,
+  activeWorkPiece?: WorkPiece,
 }
 
 export const useLumberStore = defineStore('lumber', {
@@ -13,6 +14,7 @@ export const useLumberStore = defineStore('lumber', {
       lumberItems: [],
       workPieces: new Map<string, WorkPiece[]>(),
       activeLumberItem: undefined,
+      activeWorkPiece: undefined,
   }),
   actions: {
     addNewLumberItem() {
@@ -35,6 +37,10 @@ export const useLumberStore = defineStore('lumber', {
       } else {
         this.activeLumberItem = undefined
       }
+    },    
+    selectLumberItem(lumberItem: LumberItem) {
+      this.activeLumberItem = lumberItem
+      this.activeWorkPiece = undefined
     },
     addNewWorkPiece(lumberItemId: string, position: Position, dimension: Dimension) {
       let workPieces = this.workPieces.get(lumberItemId)
@@ -48,6 +54,21 @@ export const useLumberStore = defineStore('lumber', {
         dimension,
         name: '',
       })
+    },
+    removeSelectedWorkPiece() {
+      if (!this.activeLumberItem || !this.activeWorkPiece) {
+        return
+      }
+      const workPieces = this.workPieces.get(this.activeLumberItem.id)
+      if (workPieces) {
+        this.workPieces.set(
+          this.activeLumberItem.id,
+          workPieces.filter(w => w.id !== this.activeWorkPiece?.id))
+      }
+      this.activeWorkPiece = undefined
+    }, 
+    selectWorkPiece(workPiece: WorkPiece) {
+      this.activeWorkPiece = workPiece
     },
   },
 })

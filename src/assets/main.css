@@ -5,6 +5,7 @@
   --cell-in-drag: rgb(217, 142, 3);
   --grid-border: 1px solid rgb(110, 109, 109);
   --work-piece-border: 1px solid rgb(212, 212, 212);
+  --work-piece-border-active: 2px solid rgb(217, 142, 3);
   --input-background: rgb(171, 171, 171);
   --active-tab: rgb(217, 142, 3);
   --button-primary: rgb(34, 140, 140);

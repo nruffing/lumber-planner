@@ -8,7 +8,7 @@
         :class="{ 
           active: lumberItem.id === lumberStore.activeLumberItem?.id,
         }"
-        @click="lumberStore.activeLumberItem = lumberItem">
+        @click="lumberStore.selectLumberItem(lumberItem)">
         {{ lumberItem.name }}
       </div>
       <div class="flex-fill"></div>
@@ -38,6 +38,18 @@ export default defineComponent({
   },
   mounted() {
     this.lumberStore.addNewLumberItem()
+    window.addEventListener('keydown', this.onKeyDown)
+  },
+  beforeUnmount() {
+    window.removeEventListener('keydown', this.onKeyDown)
+  },
+  methods: {
+    onKeyDown(event: KeyboardEvent) {
+      //console.log(event.key)
+      if (event?.key === 'Delete') {
+        this.lumberStore.removeSelectedWorkPiece()
+      }
+    },
   },
 })
 </script>

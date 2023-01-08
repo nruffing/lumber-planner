@@ -1,18 +1,24 @@
 <template>
   <div 
     class="work-piece"
+    :class="{
+      active: workPiece.id === lumberStore.activeWorkPiece?.id,
+    }"
     :style="{
       height: `${(workPiece.dimension.lengthInches * (scale + borderWidth)) - borderWidth}px`,
       width: `${(workPiece.dimension.widthInches * (scale + borderWidth)) - borderWidth}px`,
       top: `${((workPiece.position.y - 1) * (scale + borderWidth)) + gridOrigin.y}px`,
       left: `${((workPiece.position.x - 1) * (scale + borderWidth)) + gridOrigin.x}px`,
       'background-color': colorHex,
-    }">
+    }"
+    @click="lumberStore.selectWorkPiece(workPiece)">
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue'
+import { mapStores } from 'pinia';
+import { useLumberStore } from '@/stores/lumber';
 import type { WorkPiece, Position } from '@/models/Lumber'
 import uniqolar from 'uniqolor'
 
@@ -37,6 +43,7 @@ export default defineComponent({
     },
   },
   computed: {
+    ...mapStores(useLumberStore),
     colorHex(): string {
       return uniqolar(this.workPiece.id).color
     },
@@ -54,5 +61,9 @@ export default defineComponent({
 .work-piece {
   position: absolute;
   border: var(--work-piece-border)
+}
+
+.work-piece.active {  
+  border: var(--work-piece-border-active)
 }
 </style>

@@ -211,7 +211,7 @@ export default defineComponent({
       for (const cell of this.cells) {
         cell.inCurrentDrag = false 
       }
-    }
+    },
   },
 })
 </script>
