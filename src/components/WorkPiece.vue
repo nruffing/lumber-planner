@@ -6,13 +6,15 @@
       width: `${(workPiece.dimension.widthInches * (scale + borderWidth)) - borderWidth}px`,
       top: `${((workPiece.position.y - 1) * (scale + borderWidth)) + gridOrigin.y}px`,
       left: `${((workPiece.position.x - 1) * (scale + borderWidth)) + gridOrigin.x}px`,
+      'background-color': colorHex,
     }">
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, type PropType } from 'vue';
-import type { WorkPiece, Position } from '@/models/Lumber';
+import { defineComponent, type PropType } from 'vue'
+import type { WorkPiece, Position } from '@/models/Lumber'
+import uniqolar from 'uniqolor'
 
 export default defineComponent({
   name: 'WorkPiece',
@@ -34,11 +36,16 @@ export default defineComponent({
       required: true,
     },
   },
+  computed: {
+    colorHex(): string {
+      return uniqolar(this.workPiece.id).color
+    },
+  },
   methods: {
     calculatePx(value: number, offset: number = 0): string {
       const scaled = (value * this.scale) + offset
       return  scaled + 'px'
-    }
+    },
   },
 })
 </script>
@@ -46,7 +53,6 @@ export default defineComponent({
 <style>
 .work-piece {
   position: absolute;
-  background-color: red;
   border: var(--work-piece-border)
 }
 </style>
