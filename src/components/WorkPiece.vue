@@ -11,7 +11,8 @@
       left: `${((workPiece.position.x - 1) * (scale + borderWidth)) + gridOrigin.x}px`,
       'background-color': colorHex,
     }"
-    @click="lumberStore.selectWorkPiece(workPiece)">
+    @click="lumberStore.selectWorkPiece(workPiece)"
+    :title="`${workPiece.name} | ${workPiece.dimension.lengthInches}in x ${workPiece.dimension.widthInches}in`">
   </div>
 </template>
 

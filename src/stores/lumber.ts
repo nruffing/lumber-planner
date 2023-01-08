@@ -37,6 +37,7 @@ export const useLumberStore = defineStore('lumber', {
       } else {
         this.activeLumberItem = undefined
       }
+      this.activeWorkPiece = undefined
     },    
     selectLumberItem(lumberItem: LumberItem) {
       this.activeLumberItem = lumberItem
@@ -48,12 +49,14 @@ export const useLumberStore = defineStore('lumber', {
         workPieces = []
         this.workPieces.set(lumberItemId, workPieces)
       }
-      workPieces.push({        
+      const workPiece = {
         id: Guid.create().toString(),
         position,
         dimension,
-        name: '',
-      })
+        name: 'new workpiece',
+      }
+      workPieces.push(workPiece)
+      this.activeWorkPiece = workPiece
     },
     removeSelectedWorkPiece() {
       if (!this.activeLumberItem || !this.activeWorkPiece) {

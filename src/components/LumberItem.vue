@@ -34,7 +34,14 @@
       :border-width="borderWidth" />
 
     <div class="info">
-      <button @click="lumberStore.removeLumberItem(lumberItem)">Close</button>
+      <div class="close">
+        <button @click="lumberStore.removeLumberItem(lumberItem)">Close</button>
+      </div>
+      <hr />
+      <div>
+        <h4>Lumber</h4>
+      </div>
+      <div class="spacer"></div>
       <div>{{ lumberItem.id }}</div>
       <div>{{ lumberItem.dimension.lengthInches }}in x {{ lumberItem.dimension.widthInches }}in</div>
       <div>{{ dragEnd?.y ?? 0 }} {{ dragEnd?.x ?? 0 }}</div>
@@ -42,6 +49,20 @@
       <div>
         <input v-model="lumberItem.name" />
       </div>
+      <hr />
+      <div>
+        <h4>Selected Work Piece</h4>
+      </div>
+      <div class="spacer"></div>
+      <template v-if="lumberStore.activeWorkPiece">
+        <div>{{ lumberStore.activeWorkPiece.id }}</div>
+        <div>
+          <input v-model="lumberStore.activeWorkPiece.name" />
+        </div>
+        <div>x: {{ lumberStore.activeWorkPiece.position.x }} y: {{ lumberStore.activeWorkPiece.position.y }}</div>
+        <div>{{ lumberStore.activeWorkPiece.dimension.lengthInches }}in x {{ lumberStore.activeWorkPiece.dimension.widthInches }}in</div>
+      </template>
+      <hr />
     </div>
   </div>
 </template>
@@ -250,9 +271,22 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   gap: 10px;
+  flex: 1;
+}
+
+.info .close {
+  text-align: right;
 }
 
 .info input {
   width: 100%;
+}
+
+.info h4 {
+  margin: 0;
+  font-weight: bold;
+  color: var(--accent);
+  border-bottom: var(--grid-border);
+  display: inline;
 }
 </style>
